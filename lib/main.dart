@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:lulu/screens/screens.dart';
 
 import 'package:lulu/services.dart/post_service.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/home_screen.dart';
 
-void main() {runApp(MyApp());}
+
+void main() => runApp(AppState());
+
+class AppState extends StatelessWidget {
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: ( _)=> PostService())
+      ],
+      child: MyApp(),
+      );
+  }
+}
+
 
 
 class MyApp extends StatelessWidget {
@@ -17,11 +34,11 @@ class MyApp extends StatelessWidget {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Social media',
-      
-      home: ChangeNotifierProvider(
-        create: (context) => PostService(),
-        child: HomeScreen(),
-      ),
+      initialRoute:'login',
+      routes: {
+        'login' : ( _) => LoginScreen(),
+        'home'  : (_) => HomeScreen()
+      },
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Color.fromARGB(255, 189, 185, 185),
       appBarTheme: const AppBarTheme(

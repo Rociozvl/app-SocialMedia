@@ -25,19 +25,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
     @override
    Widget build(BuildContext context) {
-    PostService postService = Provider.of<PostService>(context, listen: false);
+  
 
      return Scaffold(
       appBar: AppBar(
-         title: Center(child: Text('Smoler')),
-       ),
+         title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+           children:[
+            Text('Smoler')
+                ] 
+            ),
+            actions: [
+                  IconButton(icon: const Icon(Icons.exit_to_app_outlined) , onPressed: () {  
+                  Navigator.pushReplacementNamed(context, 'login');
+                 },
+               )  ,
+             ],
+            ),
         body: Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      children: [
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+        children: [
         const SizedBox(height: 20),
         _buildPostList(context),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -47,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 2,
                 blurRadius: 7,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -84,12 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
    }
 
    Future<void> _postToFirebase(BuildContext context) async {
+    
      String publicacion = _textInputController.text;
 
      if (publicacion.isNotEmpty) {
+
        PostService postService = Provider.of<PostService>(context, listen: false);
 
       Post post = Post(publicacion: publicacion);
+
        await postService.createPost(post);
 
        _textInputController.clear();
@@ -97,18 +111,22 @@ class _HomeScreenState extends State<HomeScreen> {
    }
 
    Widget _buildPostList(BuildContext context) {
+
      PostService postService = Provider.of<PostService>(context);
+
        if (postService.isLoading) {
-       return CircularProgressIndicator();
+       return const CircularProgressIndicator();
        } else {
        return Expanded(
          child: Container(
-          padding: EdgeInsets.symmetric( horizontal: 10),
+          padding: const EdgeInsets.symmetric( horizontal: 10),
            child: ListView.builder(
             
              itemCount: postService.posts.length,
              itemBuilder: (context, index) {
+
               String? postId = postService.posts[index].id; 
+
                return Container(
                 margin: EdgeInsets.only(bottom: 10.0), // Espacio entre los contenedores de los posts
                 decoration: BoxDecoration(
@@ -138,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                            onPressed: () {
                                String? postId = postService.posts[index].id;
                                postService.toggleLike(postId!, postService.postLikeStatus[postId] ?? false);
+                               
                                setState(() {
                                      postService.postLikeStatus[postId] = !(postService.postLikeStatus[postId] ?? false);
                                 });
